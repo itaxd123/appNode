@@ -20,28 +20,28 @@ Este es un formulario de registro desarrollado con Node.js que se conecta con la
 **Configuración de API WordPress para Registro de Usuario**
 
 Para habilitar el registro de usuario en la API de WordPress, se debe agregar el siguiente código en el archivo functions.php del tema activo o en el archivo mu-plugins de WordPress:
-
-`add_action( 'rest_api_init', function () { `<br>`
-    // Habilitar registro de usuario`<br>`
-   register_rest_route( 'wp/v2', '/users/register', array(`<br>`
-        'methods' => 'POST',`<br>`
-        'callback' => 'register_user',`<br>`
-    ) );`<br>`
-} );`<br>`
-
+```
+add_action( 'rest_api_init', function () {
+    // Habilitar registro de usuario
+   register_rest_route( 'wp/v2', '/users/register', array(
+        'methods' => 'POST',
+        'callback' => 'register_user',
+    ) );
+} );
+```
 Para registrar un usuario, se debe enviar una solicitud HTTP POST a la siguiente URL: `https://tusitio.com/wp-json/wp/v2/users/register` con los siguientes parámetros:
 
 * `name`: Nombre completo del usuario.
 * `email`: Correo electrónico del usuario.
 * `english_level`: Nivel de inglés del usuario.
 El siguiente código muestra la función register_user que maneja el registro de usuarios a través de la API de WordPress:
-`
+```
 function getUsernameApi($text) {
    $username = strtolower(explode("@", $text)[0]);
    return $username;
-}`
+}
 
-`function register_user( $request ) {
+function register_user( $request ) {
 	$username = getUsernameApi(sanitize_text_field( $request['email'] ));
 	$name = sanitize_text_field( $request['name'] );
         $email = sanitize_email( $request['email'] );
@@ -98,21 +98,26 @@ function getUsernameApi($text) {
 				'code' => 200 
 			);
 		}
-	}}`
+	}
+}
+```
 
 Para agregar un nuevo campo personalizado en el perfil de usuario, se puede utilizar el filtro user_contactmethods. El siguiente código muestra cómo agregar el campo "Nivel de inglés":
 
-`// Add new field English Level `<br>`
+```
+// Add new field English Level 
 add_filter('user_contactmethods', 'addFieldEnglishLevel');
 
-`function addFieldEnglishLevel($user_contactmethods){ `<br>`
+function addFieldEnglishLevel($user_contactmethods){ `<br>`
   $user_contactmethods['english_level'] = __('English Level');
   return $user_contactmethods;
-}`
+}
+```
 
 Este código agrega un nuevo campo "Nivel de inglés" en el perfil de usuario. Para guardar el valor de este campo en la base de datos, se puede utilizar el siguiente código:
 
-`// Save in Database
+```
+// Save in Database
 add_action('user_register', 'saveEnglishLevel');
 
 function saveEnglishLevel($user_id){
@@ -120,7 +125,8 @@ function saveEnglishLevel($user_id){
     $english_level = $_POST['english_level'];
     add_user_meta($user_id, 'english_level', $english_level);
   }
-}`
+}
+```
 
 Este código guarda el valor del campo "Nivel de inglés" en la base de datos cuando un usuario se registra en el sitio.
 
@@ -132,8 +138,8 @@ La segunda función, sendMailUpdate, se llama cuando se actualiza el nivel de in
 
 Es importante tener en cuenta que para utilizar la función wp_mail, se debe configurar la función de correo electrónico en WordPress correctamente. También se deben proporcionar los detalles correctos del correo electrónico, como la dirección de correo electrónico del remitente y las credenciales del servidor de correo electrónico, en la configuración de WordPress.
 
-
-`function sendMail($user_id) {
+```
+function sendMail($user_id) {
     $user = get_userdata($user_id);
     $email = $user->user_email;
     $username = $user->user_login;
@@ -154,9 +160,9 @@ Es importante tener en cuenta que para utilizar la función wp_mail, se debe con
     $headers = array('Content-Type: text/html; charset=UTF-8');
 
     wp_mail($email, $subject, $message, $headers);
-}`
+}
 
-`function sendMailUpdate($user_id) {
+function sendMailUpdate($user_id) {
     $user = get_userdata($user_id);
     $email = $user->user_email;
     $username = $user->user_login;
@@ -173,7 +179,8 @@ Es importante tener en cuenta que para utilizar la función wp_mail, se debe con
 	
     wp_mail($email, $subject, $message, $headers);
 
-}`
+}
+```
 
 
 
