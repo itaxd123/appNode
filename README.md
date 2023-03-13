@@ -18,15 +18,16 @@ Este es un formulario de registro desarrollado con Node.js que se conecta con la
 /////////////////////////////////////////////////////////////////
 
 **Configuración de API WordPress para Registro de Usuario**
+
 Para habilitar el registro de usuario en la API de WordPress, se debe agregar el siguiente código en el archivo functions.php del tema activo o en el archivo mu-plugins de WordPress:
 
-`add_action( 'rest_api_init', function () {
-    // Habilitar registro de usuario
-    register_rest_route( 'wp/v2', '/users/register', array(
-        'methods' => 'POST',
-        'callback' => 'register_user',
-    ) );
-} );`
+`add_action( 'rest_api_init', function () {`
+    `// Habilitar registro de usuario`
+   `register_rest_route( 'wp/v2', '/users/register', array(`
+        `'methods' => 'POST',`
+        `'callback' => 'register_user',`
+    `) );`
+`} );`
 
 Para registrar un usuario, se debe enviar una solicitud HTTP POST a la siguiente URL: `https://tusitio.com/wp-json/wp/v2/users/register` con los siguientes parámetros:
 
