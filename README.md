@@ -21,13 +21,13 @@ Este es un formulario de registro desarrollado con Node.js que se conecta con la
 
 Para habilitar el registro de usuario en la API de WordPress, se debe agregar el siguiente código en el archivo functions.php del tema activo o en el archivo mu-plugins de WordPress:
 
-`add_action( 'rest_api_init', function () {`
-    `// Habilitar registro de usuario`
-   `register_rest_route( 'wp/v2', '/users/register', array(`
-        `'methods' => 'POST',`
-        `'callback' => 'register_user',`
-    `) );`
-`} );`
+`add_action( 'rest_api_init', function () { `<br>`
+    // Habilitar registro de usuario`<br>`
+   register_rest_route( 'wp/v2', '/users/register', array(`<br>`
+        'methods' => 'POST',`<br>`
+        'callback' => 'register_user',`<br>`
+    ) );`<br>`
+} );`<br>`
 
 Para registrar un usuario, se debe enviar una solicitud HTTP POST a la siguiente URL: `https://tusitio.com/wp-json/wp/v2/users/register` con los siguientes parámetros:
 
@@ -44,16 +44,16 @@ function getUsernameApi($text) {
 `function register_user( $request ) {
 	$username = getUsernameApi(sanitize_text_field( $request['email'] ));
 	$name = sanitize_text_field( $request['name'] );
-    $email = sanitize_email( $request['email'] );
+        $email = sanitize_email( $request['email'] );
 	$englishLevel = sanitize_text_field( $request['english_level'] );
-	$password = wp_generate_password();
+	$password = wp_generate_password();`
 	
     $userdata = array(
         'user_login'    => $username,
         'user_email'    => $email,
         'user_pass'     => $password,
-		'first_name'    => $name,
-		'english_level' => $englishLevel,
+	'first_name'    => $name,
+	'english_level' => $englishLevel,
         'role'          => 'subscriber',
     );
 
@@ -98,15 +98,14 @@ function getUsernameApi($text) {
 				'code' => 200 
 			);
 		}
-	}
-}`
+	}}`
 
 Para agregar un nuevo campo personalizado en el perfil de usuario, se puede utilizar el filtro user_contactmethods. El siguiente código muestra cómo agregar el campo "Nivel de inglés":
 
-`// Add new field English Level 
+`// Add new field English Level `<br>`
 add_filter('user_contactmethods', 'addFieldEnglishLevel');
 
-function addFieldEnglishLevel($user_contactmethods){
+`function addFieldEnglishLevel($user_contactmethods){ `<br>`
   $user_contactmethods['english_level'] = __('English Level');
   return $user_contactmethods;
 }`
